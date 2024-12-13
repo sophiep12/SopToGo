@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SopToGo!!!</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f9;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center; /* Keep everything centered vertically */
+            height: 100vh;
+        }
+
+        #chatbot-container {
+            width: 100%;
+            max-width: 500px;
+            background: #fff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        #chatbox {
+            flex: 1;
+            padding: 10px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .message {
+            margin: 5px 0;
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        .user {
+            background: #d1e7dd;
+            align-self: flex-end;
+        }
+
+        .bot {
+            background: #e2e3e5;
+            align-self: flex-start;
+        }
+
+        #input-container {
+            display: flex;
+            border-top: 1px solid #ddd;
+        }
+
+        #user-input {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            outline: none;
+        }
+
+        #send-button {
+            background: #6c757d;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            transition: background 0.3s;
+
+        }
+
+        #intro {
+            text-align: center;
+            margin-bottom: 20px; /* Space between the intro and chatbot */
+        }
+
+        #send-button:hover {
+            background: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <div id="intro">
+        <h1>Welcome to SopToGo!</h1>
+        <p>This is a virtual version of Sophie, made by Sophie, with a ton of limitations because she's literally not good at coding -- but hey, it's a start! Text me telling me about how cool you think this is so I get the motivation to make more fun projects :]</p>
+    </div>
+
+    <div id="chatbot-container">
+        <div id="chatbox"></div>
+        <div id="input-container">
+            <input type="text" id="user-input" placeholder="Type a message...">
+            <button id="send-button">Send</button>
+        </div>
+    </div>
+
+    <script>
+        const chatbox = document.getElementById('chatbox');
+        const userInput = document.getElementById('user-input');
+        const sendButton = document.getElementById('send-button');
+
+        const botReplies = {
+            'greeting': "Hi there! I'm SopToGo! Let's have a chat :)\nhow are you feeling habibi? (when you are done, just say 'That's all!' so I know, because I'm not that smart, Sophie kinda sucks at coding....)",
+            'sad': "Aww don't be sad my love. Maybe texting Sophie will help you feel better, I think she's pretty cool...",
+            'bad': "Aww, it's okay my love. Maybe texting Sophie will help you feel better, I think she's pretty cool...",
+            'stressed': "Stress is not skibidi, tell her to go away. Not cool.......",
+            'happy': "OMG ME TOO well technically I don't have feelings but I'm sure Sophie is happy right now soooooo HAPPY BUDS!!!!",
+            'good': "OMG ME TOO well technically I don't have feelings but I'm sure Sophie is happy right now soooooo HAPPY BUDS!!!!",
+            'lonely': "Makes sense that's probably why you are typing to me... well go call Sophie she's not doing anything important anyway",
+            'thats all': "Okayy cute! Tell me what you are doing today! I'm not smart enough to decipher it but that's okay!",
+            'default': "Sorry, I didn't quite get that. Can you try again?"
+        };
+
+        function getBotReply(userMessage) {
+            const cleanedMessage = userMessage.toLowerCase().replace(/[^a-zA-Z0-9 ?!'"]/g, '');
+
+            // Check for greeting patterns using regex
+            const greetingPatterns = /\b(hello|hi|hey|yo|hiii|hii|heyy|heyyy)\b/;
+            if (greetingPatterns.test(cleanedMessage)) {
+                return botReplies['greeting'];
+            }
+
+            // Keyword-based response matching
+            if (cleanedMessage.includes('sad')) return botReplies['sad'];
+            if (cleanedMessage.includes('stressed')) return botReplies['stressed'];
+            if (cleanedMessage.includes('happy')) return botReplies['happy'];
+            if (cleanedMessage.includes('lonely')) return botReplies['lonely'];
+
+            return botReplies[cleanedMessage] || botReplies['default'];
+        }
+
+        function appendMessage(content, type) {
+            const message = document.createElement('div');
+            message.textContent = content;
+            message.className = `message ${type}`;
+            chatbox.appendChild(message);
+            chatbox.scrollTop = chatbox.scrollHeight;
+        }
+
+        sendButton.addEventListener('click', () => {
+            const userMessage = userInput.value.trim();
+            if (userMessage) {
+                appendMessage(userMessage, 'user');
+                const botReply = getBotReply(userMessage);
+                appendMessage(botReply, 'bot');
+                userInput.value = ''; // Clear the input field after sending the message
+            }
+        });
+
+        userInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') {
+                sendButton.click();
+            }
+        });
+    </script>
+</body>
+</html>
